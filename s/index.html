@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>365 Days:Growth</title>
+<!--
+  Share-link redirect for 365 Days:Growth (served at https://APP_DOMAIN/s).
+  No cookies, no analytics, no tracking scripts, no external requests.
+  The stores' own acquisition reports count the installs per campaign:
+    Google Play: referrer utm_source=share&utm_medium=card
+    App Store:   campaign token ct=share (needs your provider token, pt)
+-->
+<style>
+  :root { color-scheme: light dark; --fg:#1b1b1b; --bg:#ffffff; --accent:#1B5E20; }
+  @media (prefers-color-scheme: dark) { :root { --fg:#f2f2f2; --bg:#121212; --accent:#9CCC65; } }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         background:var(--bg); color:var(--fg); }
+  main { max-width: 32rem; margin: 0 auto; padding: 3rem 1rem; text-align:center; }
+  h1 { font-size: 1.75rem; margin: 0 0 .5rem; }
+  p  { font-size: 1.05rem; line-height: 1.5; }
+  .badges { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-top:2rem; }
+  .badge { display:inline-block; min-height:48px; padding:.85rem 1.4rem; border-radius:10px;
+           background:#000; color:#fff; text-decoration:none; font-weight:600; font-size:1rem; }
+  .badge:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>365 Days:Growth</h1>
+  <p>One saying a day, to help you grow.</p>
+  <p id="status" aria-live="polite">Choose your store:</p>
+  <div class="badges">
+    <a class="badge" id="play" href="#">Get it on Google Play</a>
+    <a class="badge" id="apple" href="#">Download on the App Store</a>
+  </div>
+</main>
+<script>
+  // ── Store settings: the only values to edit ─────────────────────────────
+  var ANDROID_PACKAGE = "com.wealth.days365";
+  var APP_STORE_ID    = "APP-STORE-ID";     // digits only, from App Store Connect
+  var PROVIDER_TOKEN  = "PROVIDER-TOKEN";   // App Store Connect > App Analytics > campaign link
+  // ────────────────────────────────────────────────────────────────────────
+  var play = "https://play.google.com/store/apps/details?id=" + ANDROID_PACKAGE +
+             "&referrer=" + encodeURIComponent("utm_source=share&utm_medium=card");
+  var apple = "https://apps.apple.com/app/apple-store/id" + APP_STORE_ID +
+              "?pt=" + encodeURIComponent(PROVIDER_TOKEN) + "&ct=share&mt=8";
+  document.getElementById("play").href = play;
+  document.getElementById("apple").href = apple;
+
+  var ua = navigator.userAgent || "";
+  var isAndroid = /Android/i.test(ua);
+  // iPadOS reports itself as a Mac; a touch screen gives it away.
+  var isIOS = /iPhone|iPad|iPod/i.test(ua) ||
+              (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+  if (isAndroid || isIOS) {
+    document.getElementById("status").textContent = "Opening the store…";
+    window.location.replace(isAndroid ? play : apple);
+  }
+</script>
+</body>
+</html>
