@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<title>365 Days:Growth</title>
+<title>365 Days: Growth</title>
 <!--
-  Share-link redirect for 365 Days:Growth (served at https://APP_DOMAIN/s).
+  Share-link redirect for 365 Days: Growth (served at https://APP_DOMAIN/s).
   No cookies, no analytics, no tracking scripts, no external requests.
   The stores' own acquisition reports count the installs per campaign:
     Google Play: referrer utm_source=share&utm_medium=card
@@ -28,7 +28,7 @@
 </head>
 <body>
 <main>
-  <h1>365 Days:Growth</h1>
+  <h1>365 Days: Growth</h1>
   <p>One saying a day, to help you grow.</p>
   <p id="status" aria-live="polite">Choose your store:</p>
   <div class="badges">
@@ -46,17 +46,28 @@
              "&referrer=" + encodeURIComponent("utm_source=share&utm_medium=card");
   var apple = "https://apps.apple.com/app/apple-store/id" + APP_STORE_ID +
               "?pt=" + encodeURIComponent(PROVIDER_TOKEN) + "&ct=share&mt=8";
+  // The App Store button only appears once the real App Store ID is filled in.
+  var hasAppStore = /^\d+$/.test(APP_STORE_ID);
   document.getElementById("play").href = play;
-  document.getElementById("apple").href = apple;
+  var appleBtn = document.getElementById("apple");
+  if (hasAppStore) { appleBtn.href = apple; } else { appleBtn.remove(); }
 
   var ua = navigator.userAgent || "";
   var isAndroid = /Android/i.test(ua);
   // iPadOS reports itself as a Mac; a touch screen gives it away.
   var isIOS = /iPhone|iPad|iPod/i.test(ua) ||
               (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
-  if (isAndroid || isIOS) {
-    document.getElementById("status").textContent = "Opening the store…";
-    window.location.replace(isAndroid ? play : apple);
+  var status = document.getElementById("status");
+  if (isAndroid) {
+    status.textContent = "Opening Google Play…";
+    window.location.replace(play);
+  } else if (isIOS && hasAppStore) {
+    status.textContent = "Opening the App Store…";
+    window.location.replace(apple);
+  } else if (isIOS) {
+    status.textContent = "Coming soon to iPhone and iPad. Available now on Android:";
+  } else if (!hasAppStore) {
+    status.textContent = "Available on Android:";
   }
 </script>
 </body>
